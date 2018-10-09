@@ -1,0 +1,63 @@
+* Contortion
+A Chez Scheme project used to translate CSV files into contour graphs
+(format TBD) in potentially the most complicated way possible, but I'm
+going to have fun with it anyways.
+
+To run, call =main= with two arguments:
+- the name of the CSV file you wish to convert
+- the number of contour lines you want
+
+The program will evenly divide up the data based on the min and max
+into the given number of contours.
+* General Methodology
+1. Read CSV into a 2D list (a "grid").
+2. Reduce the values in the grid to the contour level they are on (0
+   for the lowest level, 1 for the next lowest, etc.).
+3. Convert 2D list into a graph connecting neighboring cells (no
+   diagonal connections).
+4. Perform graph traversals to extract connected subgraphs for each
+   height level. If there are separate subgraphs at the same height
+   level, those will be treated as completely separate graphs.
+5. For each graph, determine its boundaries by picking the
+   upper-leftmost point and following the boundary until it returns to
+   its starting state.
+6. Map the boundaries onto 2D space and connect them with lines.
+7. Export the image.
+** Example
+In =sample.csv=:
+#+BEGIN_QUOTE
+1,2,3,4
+2,3,4,5
+3,4,5,6
+4,5,6,7
+#+END_QUOTE
+
+If we ask for two contours, the level grid looks like this:
+#+BEGIN_QUOTE
+0,0,0,1
+0,0,1,1
+0,1,1,1
+1,1,1,2
+#+END_QUOTE
+
+The graph will connect each grid cell to each neighboring grid cell,
+excluding diagonals.
+
+The resulting grids will look like these:
+#+BEGIN_QUOTE
+0,0,0
+0,0
+0
+#+END_QUOTE
+#+BEGIN_QUOTE
+      1
+    1,1
+  1,1,1
+1,1,1
+#+END_QUOTE
+#+BEGIN_QUOTE
+
+
+
+      2
+#+END_QUOTE
