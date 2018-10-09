@@ -4,7 +4,7 @@
 (define (main filename num-contours)
   (let* ((grid (read-csv filename))
          (contour-grid (make-contour-grid grid num-contours)))
-    contour-grid))
+    (grid->graph contour-grid)))
 
 (define (make-contour-grid grid num-contours)
   (let* ((min-val (grid-min grid))
