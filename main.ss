@@ -3,8 +3,15 @@
 
 (define (main filename num-contours)
   (let* ((grid (read-csv filename))
-         (contour-grid (make-contour-grid grid num-contours)))
-    (grid->graph contour-grid)))
+         (contour-grid (make-contour-grid grid num-contours))
+         (contour-graph (grid->graph contour-grid))
+         (trimmed-contour-graph (graph-filter-edges edge-connects-same-contours
+                                                    contour-graph)))
+    trimmed-contour-graph))
+
+(define (edge-connects-same-contours e)
+  (equal? (car (edge-origin e))
+          (car (edge-dest e))))
 
 (define (make-contour-grid grid num-contours)
   (let* ((min-val (grid-min grid))
