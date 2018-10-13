@@ -5,9 +5,12 @@
   (let* ((grid (read-csv filename))
          (contour-grid (make-contour-grid grid num-contours))
          (contour-graph (grid->graph contour-grid))
-         (trimmed-contour-graph (graph-filter-edges edge-connects-same-contours
-                                                    contour-graph)))
-    trimmed-contour-graph))
+         (trimmed-edges (graph-filter-edges edge-connects-same-contours
+                                            contour-graph))
+         (trimmed-contour-graph (graph (graph-vertices contour-graph)
+                                       trimmed-edges))
+         (contour-subgraphs (graph->connected-subgraphs trimmed-contour-graph)))
+    contour-subgraphs))
 
 (define (edge-connects-same-contours e)
   (equal? (car (edge-origin e))

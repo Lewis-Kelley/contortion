@@ -5,6 +5,11 @@
   (and (list? item)
        (equal? (set item) item)))
 
+(define (set-intersect set1 set2)
+  (set-filter (lambda (elem)
+                (member elem set2))
+              set1))
+
 (define (set-union set1 set2)
   (cond
    ((empty? set1) set2)
